@@ -168,6 +168,18 @@ db_connect <- function(dbdir, read_only = TRUE) {
         refpmid_refpmid <<- character()
     }
 
+    write_index <- function(internal_id, start, length) {
+        spdl::debug("write_index() {}", length(internal_id))
+        con <- connect()
+        ## article
+        index <- data.frame(
+            id = internal_id,
+            start = start,
+            length = length
+        )
+        dbWriteTable(con, "index", index)
+    }
+
     connect()
     structure(
         list(
@@ -178,6 +190,7 @@ db_connect <- function(dbdir, read_only = TRUE) {
             path = path,
             write_metadata = write_metadata,
             flush_metadata = flush_metadata,
+            write_index = write_index,
             tables = function() dbListTables(connect()),
             tbl = function(src, ...) dplyr::tbl(connect(), src, ...)
         ),
