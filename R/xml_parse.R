@@ -11,12 +11,12 @@ xml_branches <- function(db) {
         pmcid <- xmlValue(doc[[path]])
 
         ## article.  pmcid 9694029 has several article-id (different
-        ## stages of revision); choose the one that has a PMCID
+        ## stages of revision); choose the one that has a PMCID.
         path <- paste0(
             "//front/article-meta/article-id[@pub-id-type = 'pmc']/../..",
             "/article-meta/title-group/article-title"
         )
-        article <- xmlValue(doc[[path]])
+        article <- xmlValue(doc[path])
         ## FIXME: article-type from <article article-type
 
         ## journal.  PMCID 9694029 has several journal-title (all
@@ -36,16 +36,12 @@ xml_branches <- function(db) {
         ## 35231       <pub-date pub-type="pmc-release">
         ## 46965       <pub-date pub-type="collection">
         ## 64097       <pub-date pub-type="epub">
-        path <- "//article-meta/pub-date[@pub-type='epub']/year"
-        year <- as.integer(xmlValue(doc[[path]]))
-        if (is.na(year)) {
-            path <- "//article-meta/pub-date[@pub-type='collection']/year"
-            year <- as.integer(xmlValue(doc[path][[1]]))
-        }
-        if (is.na(year)) {
-            path <- "//article-meta/pub-date[@pub-type='pmc-release']/year"
-            year <- as.integer(xmlValue(doc[path][[1]]))
-        }
+
+        ## first year in any pub-date field
+        path <- "//article-metadata/pub-date/year"
+        year <- as.integer(xmlValue(doc[path]))
+        if (length(year) > 1L)
+            year <- min(year)
 
         ## pmid
         path <- "//article-meta/article-id[@pub-id-type='pmid']"
