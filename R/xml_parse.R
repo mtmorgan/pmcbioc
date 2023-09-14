@@ -94,7 +94,7 @@ xml_parse <-
     stopifnot(
         is_scalar_character(xml_file),
         file.exists(xml_file),
-        inherits(db, "PMCBioc_db"),
+        inherits(db, "pmcbioc_db"),
         !db$is_read_only()
     )
 

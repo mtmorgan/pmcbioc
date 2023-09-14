@@ -8,7 +8,7 @@ xml_index <-
     stopifnot(
         is_scalar_character(xml_file),
         file.exists(xml_file),
-        inherits(db, "PMCBioc_db"),
+        inherits(db, "pmcbioc_db"),
         db$is_connected(),
         !db$is_read_only(),
         !"index" %in% db$tables()
@@ -55,14 +55,21 @@ xml_index <-
 #' @importFrom XML xmlParse
 #'
 #' @export
-xml_query <-
-    function(.data, xml_file = "pmc_result.xml")
+xml_xpath <-
+    function(
+        .data,
+        xpath = "/",
+        xml_file = "pmc_result.xml",
+        as = c("xml", "text")
+    )
 {
     stopifnot(
         "start" %in% names(.data),
         "length" %in% names(.data),
+        is_scalar_character(xpath),
         file.exists(xml_file)
     )
+    as <- match.arg(as)
 
     con <- file(xml_file, open = "rb")
     on.exit(close(con))
@@ -77,5 +84,8 @@ xml_query <-
         paste(articles, collapse = "\n"),
         "</pmc_articleset>\n"
     )
-    xmlParse(articleset)
+    result <- xmlParse(articleset)[xpath]
+    if (identical(as, "text"))
+        result <- xmlValue(result)
+    result
 }

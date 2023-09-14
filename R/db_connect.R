@@ -1,16 +1,15 @@
 #' @importFrom duckdb duckdb dbConnect dbDisconnect dbWriteTable
-#'     dbListTables
 #'
 #' @importFrom dplyr tbl
 #'
 #' @export
-db_connect <- function(dbdir, read_only = TRUE) {
+pmcbioc_db <- function(db_dir, read_only = TRUE) {
     ## validate
-    if (!file.exists(dbdir)) {
-        spdl::debug("creating '{}'", dbdir)
+    if (!file.exists(db_dir)) {
+        spdl::debug("creating '{}'", db_dir)
         read_only <- FALSE
     } else {
-        spdl::debug("using '{}'", dbdir)
+        spdl::debug("using '{}'", db_dir)
         force(read_only)
     }
 
@@ -35,43 +34,33 @@ db_connect <- function(dbdir, read_only = TRUE) {
     refpmid_pmcid <- character()
     refpmid_refpmid <- character()
 
-    path <- function()
-        dbdir
-
     is_connected <- function()
         !is.null(connection)
-
-    is_read_only <- function()
-        read_only
 
     connect <- function() {
         if (is.null(connection)) {
             spdl::info(
                 "connecting to '{}' read_only: {}",
-                dbdir, read_only
+                db_dir, read_only
             )
             n <<- 0L
             buffer_reset()
             connection <<- dbConnect(duckdb(
-                dbdir = dbdir,
+                dbdir = db_dir,
                 read_only = read_only
             ))
         }
         invisible(connection)
     }
 
-    disconnect <- function() {
-        if (is.null(connection))
-            return(invisible(NULL))
-        spdl::info("disconnect from {} with buffer size {}", dbdir, n)
-        dbDisconnect(connect(), shutdown = TRUE)
+    reset <- function() {
+        spdl::debug("resetting connection buffer with size {}", n)
         ## reset
         n <<- 0L
         buffer_reset()
         connection <<- NULL
-        invisible(connection)
     }
-        
+
     write_metadata <- function(
         pmcid, title, journal, year, pmid,
         surname, givenname,
@@ -184,31 +173,67 @@ db_connect <- function(dbdir, read_only = TRUE) {
     structure(
         list(
             connect = connect,
-            disconnect = disconnect,
+            reset = reset,
             is_connected = is_connected,
-            is_read_only = is_read_only,
-            path = path,
+            read_only = read_only,
+            db_dir = db_dir,
             write_metadata = write_metadata,
             flush_metadata = flush_metadata,
-            write_index = write_index,
-            tables = function() dbListTables(connect()),
-            tbl = function(src, ...) dplyr::tbl(connect(), src, ...)
+            write_index = write_index
         ),
-        class = "PMCBioc_db"
+        class = "pmcbioc_db"
     )
 }
 
 #' @export
-print.PMCBioc_db <-
+print.pmcbioc_db <-
     function(x, ...)
-{        
+{
     is_connected <- x$is_connected()
     cat(
-        "PMCBioc_db: ", x$path(), "\n",
-        "is_connected: ", is_connected, "\n",
-        "is_read_only: ", x$is_read_only(), "\n",
+        "pmcbioc_db: ", db_dir(x), "\n",
+        "connected: ", is_connected, "\n",
+        "read_only: ", x$read_only, "\n",
         if (is_connected)
-            paste0("tables: ", paste(x$tables(), collapse = ", "), "\n"),
+            paste0("db_tables(): ", paste(db_tables(x), collapse = ", "), "\n"),
         sep = ""
     )
+}
+
+#' @export
+db_disconnect <-
+    function(db)
+{
+    if (!db$is_connected())
+        return(db)
+    spdl::info("disconnecting from {}", db_dir(db))
+    dbDisconnect(db$connect(), shutdown = TRUE)
+    db$reset()
+    db
+}
+
+#' @export
+db_dir <-
+    function(db)
+{
+    db$dir
+}
+
+#' @importFrom duckdb dbListTables
+#'
+#' @export
+db_tables <-
+    function(db)
+{
+    db$connect() |>
+        dbListTables()
+}
+
+#' @importFrom dplyr tbl
+#'
+#' @export
+tbl.pmcbioc_db <-
+    function(src, from, ...)
+{
+    tbl(src$connect(), from, ...)
 }
