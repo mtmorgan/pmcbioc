@@ -2,3 +2,5 @@ bioconductor-citations
 pmc_result.xml
 pmc_result.duckdb
 .Rhistory
+docs
+inst/doc

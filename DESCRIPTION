@@ -1,4 +1,4 @@
-Package: PMCBioc
+Package: pmcbioc
 Title: Summarize 'PubMedCentral' Publications Mentioning 'Bioconductor'
 Version: 0.0.0.9000
 Authors@R:
@@ -8,10 +8,26 @@ Authors@R:
         role = c("aut", "cre"),
         comment = c(ORCID = "0000-0002-5874-8148")
     )
-Description: What the package does (one paragraph).
+Description: 'PubMedCentral' provides full-text search functionality,
+    returning scientific articles matching the query. 'pmcbioc' can
+    parse the 'XML' result of a 'PubMedCentral' query, extracting
+    article metadata to a database and creating an index to facilitate
+    fast access to individual articles. The database is then easily
+    queried to summarize, using 'dbplyr' and 'dplyr', the
+    articles. The indexed 'XML' file of results can be queried for one
+    or more records using 'xpath' to extract information not contained
+    in the metadata.
 License: Artistic-2.0
 Depends: dplyr
 Imports: duckdb, XML, spdl
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+URL: https://mtmorgan.github.io/pmcbioc/
+BugReports: https://github.com/mtmorgan/pmcbioc/issues
+Suggests:
+    DT,
+    ggplot2,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

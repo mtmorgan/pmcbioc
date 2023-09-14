@@ -1,6 +1,24 @@
-## command-line alternative:
+## command-line alternative (faster):
 ## grep -F --byte-offset --only-matching "<article " pmc_result.xml  |\
 ##   sed -e 's/:<article '
+
+#' @rdname xml_index
+#'
+#' @title Index a PubMedCentral XML file for fast record access.
+#'
+#' @description `xml_index()` creates an index for the XML file
+#'     retrieved from PubMedCentral, storing the index in the duckdb
+#'     database. Use `xml_xpath()` to query the index.
+#'
+#' @param xml_file `character(1)` file path to the PubMedCentral XML
+#'     file.
+#'
+#' @param db a database object returned by `pmcbioc_db()` with
+#'     `read_only = FALSE`.
+#'
+#' @return `xml_index()` returns the `pmcbioc_db` database argument
+#'     `db`.
+#'
 #' @export
 xml_index <-
     function(xml_file = "pmc_result.xml", db)
@@ -48,44 +66,4 @@ xml_index <-
 
     ## return
     db
-}
-
-#' @importFrom dplyr pull
-#'
-#' @importFrom XML xmlParse
-#'
-#' @export
-xml_xpath <-
-    function(
-        .data,
-        xpath = "/",
-        xml_file = "pmc_result.xml",
-        as = c("xml", "text")
-    )
-{
-    stopifnot(
-        "start" %in% names(.data),
-        "length" %in% names(.data),
-        is_scalar_character(xpath),
-        file.exists(xml_file)
-    )
-    as <- match.arg(as)
-
-    con <- file(xml_file, open = "rb")
-    on.exit(close(con))
-
-    articles <- Map(function(start, length) {
-        seek(con, start)
-        readChar(con, length)
-    }, pull(.data, "start"), pull(.data, "length"))
-
-    articleset <- paste0(
-        "<pmc_articleset>\n",
-        paste(articles, collapse = "\n"),
-        "</pmc_articleset>\n"
-    )
-    result <- xmlParse(articleset)[xpath]
-    if (identical(as, "text"))
-        result <- xmlValue(result)
-    result
 }

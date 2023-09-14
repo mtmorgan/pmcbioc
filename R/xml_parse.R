@@ -85,12 +85,73 @@ xml_branches <- function(db) {
     })
 }
 
+#' @rdname xml_parse
+#'
+#' @title Parse an PubMedCentral XML file to a DuckDB database 
+#'
+#' @description `xml_parse()` processes a PubMedCentral XML file by
+#'     extracting XML elements, tranforming them to text or integer
+#'     representations, and loading the result into a database.
+#'
+#' @details
+#'
+#' `xml_parse()` can be slow, e.g., 1000 records per minute, and grow
+#' to consume a large amount of memory, e.g., 18 Gb.
+#'
+#' `xml_parse()` uses `XML::xmlEventParse()` to iterate through the
+#' XML file. Each `//article` branch is queried using XPath
+#' expressions. The expressions and subsequent transformations are
+#' meant to extract the following information; currently, not all
+#' records are processed correctly.
+#'
+#' - `pmcid`: The PubMedCentral identifier associated with the record.
+#'
+#' - `title`: The article title.
+#'
+#' - `journal`: The journal in which the article was published.
+#'
+#' - `year`: The year of publication, represented as an
+#'   integer. Articles may have several publication dates (e.g.,
+#'   electronically before physically). `year` is the earliest date in
+#'   the record.
+#'
+#' - `pmid`: PubMed identifier of the record.
+#'
+#' - `surname`: Surname of each author. Some authors have only a surname.
+#'
+#' - `givenname`: Given name(s) of each author. Some authors have only
+#'   given names.
+#'
+#' - `keyword`: Keywords associated with the publication. Keywords are
+#'   not standardized
+#'
+#' - `refpmid`: PubMed identifiers of each reference in the record.
+#'
+#' `pmcid` is used as a key across database tables.
+#'
+#' @return
+#'
+#' `xml_parse()` returns the `pmcbioc_db` database passed as argument
+#' `db`, updated to include the tables described here. The tables are
+#' as follows:
+#'
+#' - `article` includes columns `pmcid`, `title`, `journal`, `year`,
+#'   and `pmid`.
+#'
+#' - `author` is a one-to-many map between `pmcid` and author
+#'   `surname` and `givenname`.
+#'
+#' - `keyword` is a one-to-many map between `pmcid` and `keyword`.
+#'
+#' - `refpmid` is a one-to-many map between `pmcid` and the `refpmid`
+#'   PubMed identifiers of cited references.
+
 #' @importFrom XML xmlEventParse
 #'
 #' @export
 xml_parse <-
     function(xml_file, db)
-{        
+{
     stopifnot(
         is_scalar_character(xml_file),
         file.exists(xml_file),

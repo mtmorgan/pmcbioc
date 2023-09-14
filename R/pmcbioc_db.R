@@ -216,7 +216,7 @@ db_disconnect <-
 db_dir <-
     function(db)
 {
-    db$dir
+    db$db_dir
 }
 
 #' @importFrom duckdb dbListTables

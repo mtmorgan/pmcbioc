@@ -1,2 +1,6 @@
 ^bioconductor-citations$
 ^pmc_result\.xml$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
