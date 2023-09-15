@@ -33,7 +33,7 @@ data.
 Some simple observations from Bioconductor citations downloaded on
 2023-09-08 include:
 
-- [Publications][pub] grow expoonentially, perhaps at a decreased rate
+- [Publications][pub] grow exponentially, perhaps at a decreased rate
   after 2010.
 - PLoS ONE, Scientific Reports and Nature Communications are the three
   most [prominent venues][venue] for publications about
@@ -42,7 +42,7 @@ Some simple observations from Bioconductor citations downloaded on
   to distinguish (shared surname and given names), but the most
   mentioning unambiguous author is 'Quackenbush'. 'Huber' is the most
   mentioning *Bioconductor* leader.
-- Common [keywords][keyword] emphasize gene experession, RNA-Seq,
+- Common [keywords][keyword] emphasize gene expression, RNA-Seq,
   methylation, transcriptomics, epigenetics, etc.
 - Publications on edgeR, DESeq2, limma, and the original
   *Bioconductor* book are [cited by other publications][refpmid]

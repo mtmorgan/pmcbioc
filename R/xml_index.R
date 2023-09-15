@@ -7,7 +7,7 @@
 #' @title Index a PubMedCentral XML file for fast record access.
 #'
 #' @description `xml_index()` creates an index for the XML file
-#'     retrieved from PubMedCentral, storing the index in the duckdb
+#'     retrieved from PubMedCentral, storing the index in the DuckDB
 #'     database. Use `xml_xpath()` to query the index.
 #'
 #' @param xml_file `character(1)` file path to the PubMedCentral XML

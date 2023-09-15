@@ -2,7 +2,7 @@
 % Please edit documentation in R/xml_parse.R
 \name{xml_parse}
 \alias{xml_parse}
-\title{Parse an PubMedCentral XML file to a DuckDB database}
+\title{Parse a PubMedCentral XML file to a DuckDB database}
 \usage{
 xml_parse(xml_file, db)
 }
@@ -22,7 +22,7 @@ PubMed identifiers of cited references.
 }
 \description{
 \code{xml_parse()} processes a PubMedCentral XML file by
-extracting XML elements, tranforming them to text or integer
+extracting XML elements, transforming them to text or integer
 representations, and loading the result into a database.
 }
 \details{

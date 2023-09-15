@@ -35,7 +35,7 @@ library(pmcbioc)
 # Retrieve and process PubMedCentral data
 
 [pmcbioc][] requires that the user visit the [PubMedCentral][] web
-site, search for terms or citations of intersted, and chooses to save
+site, search for terms or citations of interested, and chooses to save
 the results to their local disk as an XML file. For the analysis in
 this document, I visited the [Bioconductor][] web site, located the
 [Publications][] page, followed the 'PubMed Central' link to a
@@ -83,7 +83,7 @@ db
 ```
 
 Connection to a new (empty) database allows for updates (`read_only:
-FALSE`). Connecting to an existing database is by defualt read-only
+FALSE`). Connecting to an existing database is by default read-only
 (`read_only: TRUE`); an existing database can be opened to allow
 updates with the `pmcbioc_db()` argument `read_only = TRUE`.
 
@@ -194,7 +194,7 @@ query. The fields are
   with, e.g., electronic publication, submission to NIH, etc.
 
 Missing values occur when the XPath used to extract the data failed to
-identify relevant informaton. I believe that the content of the XML
+identify relevant information. I believe that the content of the XML
 associated with each record is partly at the discretion of the
 journal.
 
@@ -218,7 +218,7 @@ pubs_per_year <-
 Plot the relationship. One row is removed, corresponding to records
 for which a year was not extracted from the XML. The final year is
 incomplete, and there is a lag between publication and indexing by
-PubMedCentral, so the last two points are an anomally.
+PubMedCentral, so the last two points are an anomaly.
 
 <a id="pub" />
 
@@ -250,7 +250,7 @@ PubMedCentral identifiers. In some instances individual authors were
 not extracted (e.g., because the journal reported the author using a
 format the XPath did not capture). These entries are *not* reported as
 `NA`, but are simply omitted from the table. Thus some authors do not
-recieve credit for all their publications.
+receive credit for all their publications.
 
 ```{r}
 tbl(db, "author")
@@ -299,7 +299,13 @@ tbl(db, "author") |>
 ### `keyword` and `refpmid`
 
 The `keyword` table summarizes keywords associated with each
-publication. Keywords are not standardized, e.g, `bioinformatic` and
+publication.
+
+```{r keyword-tibble}
+tbl(db, "keyword")
+```
+
+Keywords are not standardized, e.g, `bioinformatic` and
 `bioinformatics` are both used. Nonetheless, this provides some
 insight into areas where Bioconductor is useful; an analysis could
 associate keyword with year to model shifting areas of interest.
@@ -307,7 +313,6 @@ associate keyword with year to model shifting areas of interest.
 <a id="keyword" />
 
 ```{r keyword}
-tbl(db, "keyword")
 tbl(db, "keyword") |>
     count(keyword = tolower(keyword)) |>
     filter(n >= 100) |>

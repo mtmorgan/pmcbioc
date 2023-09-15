@@ -19,6 +19,6 @@ file.}
 }
 \description{
 \code{xml_index()} creates an index for the XML file
-retrieved from PubMedCentral, storing the index in the duckdb
+retrieved from PubMedCentral, storing the index in the DuckDB
 database. Use \code{xml_xpath()} to query the index.
 }

@@ -1,3 +1,23 @@
+#' @rdname pmcbioc_db
+#'
+#' @title Connect to a DuckDB database of article metadata
+#'
+#' @description `pmcbioc_db()` connects to a new or existing DuckDB
+#'     database to store article metadata and an index individual
+#'     articles. The database is effectively explored using 'dbplyr' /
+#'     'dplyr'.
+#'
+#' @param db_dir character(1) *file* path to an existing or new DuckDB
+#'     database. If the path exists, the database is open 'read only'
+#'     (by default) to avoid corruption of existing data.
+#'
+#' @param read_only logical(1) allows existing databases to be open
+#'     for updating (e.g., adding the article XML index as a step
+#'     separate from parsing the metadata).
+#'
+#' @return `pmcbioc_db()` returns a `pmcbioc_db` object that can be
+#'     used to open metadata and index tables.
+
 #' @importFrom duckdb duckdb dbConnect dbDisconnect dbWriteTable
 #'
 #' @importFrom dplyr tbl
@@ -185,6 +205,12 @@ pmcbioc_db <- function(db_dir, read_only = TRUE) {
     )
 }
 
+#' @rdname pmcbioc_db
+#'
+#' @param x for `print.pmcbioc_db`, a `pmcbioc_db` object
+#'
+#' @param ... ignored for `print.pmcbioc_db`.
+#'
 #' @export
 print.pmcbioc_db <-
     function(x, ...)
@@ -200,6 +226,14 @@ print.pmcbioc_db <-
     )
 }
 
+#' @rdname pmcbioc_db
+#'
+#' @description `db_disconnect()` disconnects from the DuckDB
+#'     database, closing the connection and shutting down the DuckDB
+#'     instance.
+#'
+#' @param db a database object returned by `pmcbioc_db()`.
+#'
 #' @export
 db_disconnect <-
     function(db)
@@ -212,6 +246,12 @@ db_disconnect <-
     db
 }
 
+#' @rdname pmcbioc_db
+#'
+#' @description `db_dir()` returns the path to the database.
+#'
+#' @return `db_dir()` returns the to the database as a scalar character.
+#'
 #' @export
 db_dir <-
     function(db)
@@ -219,6 +259,14 @@ db_dir <-
     db$db_dir
 }
 
+#' @rdname pmcbioc_db
+#'
+#' @description `db_tables()` lists the tables defined in the
+#'     database.
+#'
+#' @return `db_tables()` returns a character vector of tables defined
+#'     in the database.
+#'
 #' @importFrom duckdb dbListTables
 #'
 #' @export
@@ -229,6 +277,21 @@ db_tables <-
         dbListTables()
 }
 
+#' @rdname pmcbioc_db
+#'
+#' @description Use `tbl()` to create a dbplyr tibble from a table in
+#'     the database.
+#'
+#' @param src an object created with `pmcbioc_db()`.
+#'
+#' @param from the name of the table to be used.
+#'
+#' @param ... for `tbl()`, additional arguments passed to
+#'     `duckdb:::tbl.duckdb_connection()`.
+#'
+#' @return `tbl()` returns a dbplyr tibble representing the DuckDB
+#'     table.
+#'
 #' @importFrom dplyr tbl
 #'
 #' @export

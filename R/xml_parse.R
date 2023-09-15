@@ -87,10 +87,10 @@ xml_branches <- function(db) {
 
 #' @rdname xml_parse
 #'
-#' @title Parse an PubMedCentral XML file to a DuckDB database 
+#' @title Parse a PubMedCentral XML file to a DuckDB database 
 #'
 #' @description `xml_parse()` processes a PubMedCentral XML file by
-#'     extracting XML elements, tranforming them to text or integer
+#'     extracting XML elements, transforming them to text or integer
 #'     representations, and loading the result into a database.
 #'
 #' @details
