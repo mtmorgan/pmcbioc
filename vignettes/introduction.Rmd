@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Installation and loading
+# Instal and load
 
 Install the development version of [pmcbioc][] from
 [GitHub](https://github.com/) with:
@@ -32,15 +32,29 @@ Load the package with:
 library(pmcbioc)
 ```
 
-# Retrieval and processing of PubMedCentral data
+# Retrieve and process PubMedCentral data
 
 [pmcbioc][] requires that the user visit the [PubMedCentral][] web
 site, search for terms or citations of intersted, and chooses to save
-the results to their local disk as an XML file. The XML contains *full
-text* of all articles satisfying the query, which means that it can be
-quite large; 71,259 citations to the term 'Bioconductor' retrieved on
-2023-09-13 occupy about 8.5GB of disk space. Suppose that the result
-file is `pmc_result.xml`, in the current working directory.
+the results to their local disk as an XML file. For the analysis in
+this document, I visited the [Bioconductor][] web site, located the
+[Publications][] page, followed the 'PubMed Central' link to a
+[predefined search][], and saved the results as an XML file. These
+steps can be automated through the NIH EUtils API, e.g., using
+[renterez][].
+
+[Bioconductor]: https://bioconductor.org
+[Publications]: https://bioconductor.org/help/publications/
+[predefined search]: https://www.ncbi.nlm.nih.gov/pmc/?term=bioconductor
+[renterez]: https://cran.r-project.org/package=rentrez
+
+![](images/pmc-workflow.png)
+
+The XML contains *full text* of all articles satisfying the query,
+which means that it can be quite large; 71,259 citations to the term
+'Bioconductor' retrieved on 2023-09-08 occupy about 8.5GB of disk
+space. Suppose that the result file is `pmc_result.xml`, in the
+current working directory.
 
 Data processing involves four steps
 
@@ -52,7 +66,7 @@ Data processing involves four steps
 3. Index the XML file to allow fast access to the full record of
    individual articles, and record the index in the database.
 4. Closing and perhaps renaming the database.
-   
+
 [PubMedCentral]: https://pubmed.ncbi.nlm.nih.gov/
 [DuckDB]: https://duckdb.org/
 [duckdb-R]: https://cran.r-project.org/package=duckdb
@@ -143,7 +157,7 @@ Optionally, rename the temporary file to something permanent.
 file.rename(db_file, "pmc_result.duckdb")
 ```
 
-# Exploring our data
+# Explore our data
 
 Start by connecting to the database. Since the database already
 exists, it opens as 'read only' so one does not have to worry about
@@ -178,7 +192,7 @@ query. The fields are
 - `year` is the earliest year recorded in the PubMedCentral
   record. Some articles have multiple publication dates associated
   with, e.g., electronic publication, submission to NIH, etc.
-  
+
 Missing values occur when the XPath used to extract the data failed to
 identify relevant informaton. I believe that the content of the XML
 associated with each record is partly at the discretion of the
@@ -206,6 +220,8 @@ for which a year was not extracted from the XML. The final year is
 incomplete, and there is a lag between publication and indexing by
 PubMedCentral, so the last two points are an anomally.
 
+<a id="pub" />
+
 ```{r pubs-per-year-plot}
 ggplot(pubs_per_year) +
     aes(x = year, y = n) +
@@ -216,6 +232,8 @@ ggplot(pubs_per_year) +
 Journals with more than 100 articles mentioning Bioconductor are
 summarized as (the unnamed journal corresponds to records for which
 the XPath did not extract a name).
+
+<a id="venue" />
 
 ```{r pubs-per-journal}
 tbl(db, "article") |>
@@ -242,6 +260,8 @@ tbl(db, "author") |>
 
 The most prolific authors (or at least unique combinations of surname
 and given names) are found as:
+
+<a id="author" />
 
 ```{r}
 tbl(db, "author") |>
@@ -284,6 +304,8 @@ publication. Keywords are not standardized, e.g, `bioinformatic` and
 insight into areas where Bioconductor is useful; an analysis could
 associate keyword with year to model shifting areas of interest.
 
+<a id="keyword" />
+
 ```{r keyword}
 tbl(db, "keyword")
 tbl(db, "keyword") |>
@@ -304,6 +326,8 @@ tbl(db, "refpmid")
 One can ask which publications mentioning 'Bioconductor' are most
 cited by other publications mentioning 'Bioconductor'
 
+<a id="refpmid" />
+
 ```{r}
 ## FIXME: is this correct?
 tbl(db, "refpmid") |>
@@ -312,6 +336,7 @@ tbl(db, "refpmid") |>
     arrange(desc(n)) |>
     head(100) |>
     collect() |>
+    select(n_citn = "n", title, journal, year) |>
     DT::datatable()
 ```
 
