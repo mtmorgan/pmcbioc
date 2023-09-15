@@ -24,6 +24,10 @@
 #'
 #' @export
 pmcbioc_db <- function(db_dir, read_only = TRUE) {
+    stopifnot(
+        is_scalar_character(db_dir),
+        is_scalar_logical(read_only)
+    )
     ## validate
     if (!file.exists(db_dir)) {
         spdl::debug("creating '{}'", db_dir)

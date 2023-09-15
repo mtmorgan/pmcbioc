@@ -156,7 +156,7 @@ xml_parse <-
         is_scalar_character(xml_file),
         file.exists(xml_file),
         inherits(db, "pmcbioc_db"),
-        !db$is_read_only()
+        !db$read_only
     )
 
     xmlEventParse(xml_file, branches = xml_branches(db))
