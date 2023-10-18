@@ -32,7 +32,7 @@ the database."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/li
     
     <a class="navbar-brand me-2" href="../index.html">pmcbioc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@ instance.</p>
 <p><code>db_dir()</code> returns the path to the database.</p>
 <p><code>db_tables()</code> lists the tables defined in the
 database.</p>
-<p>Use <code><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl()</a></code> to create a dbplyr tibble from a table in
+<p>Use <code>tbl()</code> to create a dbplyr tibble from a table in
 the database.</p>
     </div>
 
@@ -99,7 +99,7 @@ the database.</p>
 <span><span class="fu">db_tables</span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for pmcbioc_db</span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">src</span>, <span class="va">from</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">tbl</span><span class="op">(</span><span class="va">src</span>, <span class="va">from</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -121,7 +121,7 @@ separate from parsing the metadata).</p></dd>
 
 
 <dt>...</dt>
-<dd><p>for <code><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl()</a></code>, additional arguments passed to
+<dd><p>for <code>tbl()</code>, additional arguments passed to
 <code>duckdb:::tbl.duckdb_connection()</code>.</p></dd>
 
 
@@ -152,7 +152,7 @@ used to open metadata and index tables.</p>
 in the database.</p>
 
 
-<p><code><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl()</a></code> returns a dbplyr tibble representing the DuckDB
+<p><code>tbl()</code> returns a dbplyr tibble representing the DuckDB
 table.</p>
     </div>
 
