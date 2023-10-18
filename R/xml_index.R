@@ -29,7 +29,7 @@ xml_index <-
         inherits(db, "pmcbioc_db"),
         db$is_connected(),
         !db$read_only,
-        !"index" %in% db$tables()
+        !"index" %in% db_tables(db)
     )
     con <- file(xml_file, open = "rb")
     on.exit(close(con))

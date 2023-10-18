@@ -31,7 +31,7 @@ indexing the PubMedCentral XML to a database for fast access to key
 data.
 
 Some simple observations from Bioconductor citations downloaded on
-2023-09-08 include:
+2023-10-18 include:
 
 - [Publications][pub] grow exponentially, perhaps at a decreased rate
   after 2010.

@@ -1,5 +1,6 @@
 ^bioconductor-citations$
-^pmc_result\.xml$
+^pmc_result.*\.xml$
+^pmc_result\.duckdb
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$

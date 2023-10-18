@@ -51,8 +51,8 @@ steps can be automated through the NIH EUtils API, e.g., using
 ![](images/pmc-workflow.png)
 
 The XML contains *full text* of all articles satisfying the query,
-which means that it can be quite large; 71,259 citations to the term
-'Bioconductor' retrieved on 2023-09-08 occupy about 8.5GB of disk
+which means that it can be quite large; 72,446 citations to the term
+'Bioconductor' retrieved on 2023-10-18 occupy about 8.5GB of disk
 space. Suppose that the result file is `pmc_result.xml`, in the
 current working directory.
 

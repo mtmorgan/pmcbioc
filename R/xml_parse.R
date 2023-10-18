@@ -38,7 +38,7 @@ xml_branches <- function(db) {
         ## 64097       <pub-date pub-type="epub">
 
         ## first year in any pub-date field
-        path <- "//article-metadata/pub-date/year"
+        path <- "//article-meta/pub-date/year"
         year <- as.integer(xmlValue(doc[path]))
         if (length(year) > 1L)
             year <- min(year)
